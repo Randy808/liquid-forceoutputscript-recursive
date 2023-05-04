@@ -1,0 +1,20 @@
+{
+  "name": "royalty-covenant",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "json-rpc-2.0": "^1.5.1",
+    "liquidjs-lib": "^6.0.2-liquid.23",
+    "node-fetch": "^2.6.7",
+    "tiny-secp256k1": "^2.2.1"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.6.2"
+  }
+}
