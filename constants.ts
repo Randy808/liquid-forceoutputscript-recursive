@@ -26,8 +26,10 @@ export const TapTweakTaggedHashPrefixHex =
 export const LEAF_VERSION_HEX = LEAF_VERSION_TAPSCRIPT.toString(16);
 
 export const ISSUANCE_AMOUNT_IN_SATOSHIS = 1;
-export const TRANSACTION_FEE_IN_SATOSHIS = 500;
+export const TRANSACTION_FEE_IN_SATOSHIS = 400;
 
 export const NETWORK = liquid.networks.regtest;
 export const LBTC_ASSET_ID = NETWORK.assetHash;
 export const INTERNAL_PUBLIC_KEY: Buffer = internalKeypair.publicKey;
+
+export const ROYALTY_ADDRESS = "el1qqvh7vutn902n65rutd5dq0ejtpg5wenzg496cwlmxzqslklra6yeymtrchtnl0py34uy606d5yyu4qu4fu73cxkxqerfrzgld";

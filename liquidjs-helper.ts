@@ -148,6 +148,7 @@ export async function spendFromCovenant({
   spendFromCovenantDestinationScriptStart,
   assetId,
   fullScript,
+  signingKeypair,
 }: {
   covenantScript: Buffer;
   inputs: any;
@@ -156,6 +157,7 @@ export async function spendFromCovenant({
   spendFromCovenantDestinationScriptStart: Buffer;
   assetId: string;
   fullScript: Buffer;
+  signingKeypair?: any;
 }): Promise<SendResult> {
   const TRANSACTION_VERSION = 2;
   let pset = new Pset(
@@ -188,17 +190,52 @@ export async function spendFromCovenant({
     path
   );
 
-  pset.inputs[0].finalScriptWitness = witnessStackToScriptWitness([
-    Buffer.from([outputWitnessScriptData.parity ? 3 : 2]),
-    Buffer.alloc(0),
-    Buffer.concat([
-      outputWitnessScriptData.encodedScriptSize,
-      spendFromCovenantDestinationScriptStart,
-    ]),
-    ...taprootStack,
-  ]);
+  if (!signingKeypair) {
+    pset.inputs[0].finalScriptWitness = witnessStackToScriptWitness([
+      Buffer.from([outputWitnessScriptData.parity ? 3 : 2]),
+      Buffer.concat([
+        outputWitnessScriptData.encodedScriptSize,
+        spendFromCovenantDestinationScriptStart,
+      ]),
+      ...taprootStack,
+    ]);
+  } else {
+    pset.inputs[0].sighashType = Transaction.SIGHASH_ALL;
 
-  const preimage = pset.getInputPreimage(
+    const input0Preimage = pset.getInputPreimage(
+      0,
+      Transaction.SIGHASH_ALL,
+      NETWORK.genesisBlockHash,
+      leafHash
+    );
+
+    console.log(liquid.script.toASM(fullScript))
+    console.log("\n\nRecipient Pubkey,", signingKeypair.publicKey.toString("hex"));
+
+    const serializeSchnnorrSig = (sig: Buffer, hashtype: number) =>
+      Buffer.concat([
+        sig,
+        hashtype !== 0x00 ? Buffer.of(hashtype) : Buffer.alloc(0),
+      ]);
+
+    const signature = ecc.signSchnorr(
+      input0Preimage,
+      signingKeypair.privateKey,
+      Buffer.alloc(32)
+    );
+
+    pset.inputs[0].finalScriptWitness = witnessStackToScriptWitness([
+      Buffer.from([outputWitnessScriptData.parity ? 3 : 2]),
+      Buffer.concat([
+        outputWitnessScriptData.encodedScriptSize,
+        spendFromCovenantDestinationScriptStart,
+      ]),
+      serializeSchnnorrSig(Buffer.from(signature), Transaction.SIGHASH_ALL),
+      ...taprootStack,
+    ]);
+  }
+
+  const input1Preimage = pset.getInputPreimage(
     1,
     Transaction.SIGHASH_ALL,
     NETWORK.genesisBlockHash
@@ -208,7 +245,7 @@ export async function spendFromCovenant({
   pset.inputs[1].partialSigs.push({
     pubkey: keypair.publicKey,
     signature: liquid.script.signature.encode(
-      keypair.sign(preimage),
+      keypair.sign(input1Preimage),
       Transaction.SIGHASH_ALL
     ),
   });
