@@ -1,6 +1,6 @@
-# liquid-forceoutputscript-recursive
+# Covenant-Based Atomic Swaps
 
-A covenant for the Liquid sidechain that uses the psuedo-opcode 'OP_FORCE_OUTPUT_SCRIPT_VERIFY' to make a recursive script construction.
+A covenant for the Liquid sidechain that facilitates a simple atomic swap.
 
 ## Prerequisites
 - An elements node running on regtest
