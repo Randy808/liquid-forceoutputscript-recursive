@@ -1,6 +1,6 @@
-# liquid-forceoutputscript-recursive
+# liquid-recursive-royalty
 
-A covenant for the Liquid sidechain that uses the psuedo-opcode 'OP_FORCE_OUTPUT_SCRIPT_VERIFY' to make a recursive script construction.
+A covenant for the Liquid sidechain that uses the psuedo-opcode 'OP_FORCE_OUTPUT_SCRIPT_VERIFY' to make a recursive royalty script bound to a particular asset.
 
 ## Prerequisites
 - An elements node running on regtest
