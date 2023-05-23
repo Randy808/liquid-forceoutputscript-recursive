@@ -80,7 +80,6 @@ function getCheckSigScript(recipientPublicKey) {
 async function main() {
   const createOutputScriptEnd = `OP_SWAP OP_DUP OP_CAT OP_CAT`;
   const ROYALTY_IN_SATOSHIS = 500;
-  const ASSET_INDEX_OPCODE = `OP_1`;
 
   let scriptEnd = `${createOutputScriptEnd} OP_CAT OP_PUSHCURRENTINPUTINDEX OP_SWAP ${toXOnly(
     INTERNAL_PUBLIC_KEY
